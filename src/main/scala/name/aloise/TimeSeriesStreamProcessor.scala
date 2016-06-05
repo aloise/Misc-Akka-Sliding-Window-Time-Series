@@ -19,9 +19,25 @@ import scala.concurrent.duration.Duration
   */
 class TimeSeriesStreamProcessor( implicit actorSystem:ActorSystem, materializer:ActorMaterializer ) {
 
-  def run( source:Source[InputValue,NotUsed], sink:Sink[OutputValue, Future[Done]], windowDuration:Duration ):Future[Done] = {
+  /**
+    *
+    * @param source Input Source
+    * @param sink Output Sink
+    * @param windowDuration Event window duration
+    * @param outputBuilder Output value builder from the list of parameters : Input, Index in window, Sum in window, Min in window, Max in window
+    * @tparam A Input Value type
+    * @tparam R Resulting Ouptup
+    * @return Result future
+    */
+  def run[A <: InputValue, R](
+    source:Source[A,_],
+    sink:Sink[OutputValue, Future[R]],
+    windowDuration:Duration,
+    outputBuilder: ( A, Int, BigDecimal, BigDecimal, BigDecimal ) => OutputValue =
+    ( i:A, num:Int, sum:BigDecimal, min:BigDecimal, max:BigDecimal ) => new OutputValue( i, num, sum, min, max )
+  ):Future[R] = {
     source.
-      via( new SlidingTimeSeriesProcessor(windowDuration) ).
+      via( new SlidingTimeSeriesProcessor[A](windowDuration,outputBuilder ) ).
       runWith(sink)
   }
 }

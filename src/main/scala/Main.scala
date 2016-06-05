@@ -1,12 +1,17 @@
+import java.io.File
+import java.net.URL
+import java.nio.file.{Path, Paths}
+
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.{ActorMaterializer, IOResult}
+import akka.stream.scaladsl.{FileIO, Framing, Sink, Source}
+import akka.util.ByteString
 import name.aloise.TimeSeriesStreamProcessor
 import name.aloise.models.{InputValue, OutputValue}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
-import scala.util.Random
+import scala.util.{Random, Success, Try}
 
 /**
   * User: aloise
@@ -22,9 +27,14 @@ object Main {
   def main(args: Array[String]) {
 
 
-    val initialTimestamp = System.currentTimeMillis()/1000
+    val inputPath = Paths.get( "/home/aloise/work/www/aloise/challenge-fyber/src/src/main/resources/data_scala.txt" )
 
-    val source = Source( 1 to 100 ).map( i => new InputValue( initialTimestamp.toInt + i, BigDecimal( Random.nextInt(100) )/100 ) )
+    val inputFile =
+      FileIO.
+        fromPath( inputPath ).
+        via( Framing.delimiter( ByteString("\n"), 64, allowTruncation = true ) ).
+        map( InputValue.parse ).
+        collect{ case Success( input ) => input }
 
     val sink = Sink.foreach[OutputValue]( println )
 
@@ -32,7 +42,7 @@ object Main {
 
     val completedFuture =
       processor.
-        run( source, sink, 5.seconds ).
+        run( inputFile, sink, 60.seconds ).
         map( _ => actorSystem.terminate() )
 
 
