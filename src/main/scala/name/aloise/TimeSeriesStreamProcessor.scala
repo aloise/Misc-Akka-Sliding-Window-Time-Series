@@ -26,7 +26,7 @@ class TimeSeriesStreamProcessor( implicit actorSystem:ActorSystem, materializer:
     * @param windowDuration Event window duration
     * @param outputBuilder Output value builder from the list of parameters : Input, Index in window, Sum in window, Min in window, Max in window
     * @tparam A Input Value type
-    * @tparam R Resulting Ouptup
+    * @tparam R Resulting Output
     * @return Result future
     */
   def run[A <: InputValue, R](
@@ -34,10 +34,10 @@ class TimeSeriesStreamProcessor( implicit actorSystem:ActorSystem, materializer:
     sink:Sink[OutputValue, Future[R]],
     windowDuration:Duration,
     outputBuilder: ( A, Int, BigDecimal, BigDecimal, BigDecimal ) => OutputValue =
-    ( i:A, num:Int, sum:BigDecimal, min:BigDecimal, max:BigDecimal ) => new OutputValue( i, num, sum, min, max )
+      ( i:A, num:Int, sum:BigDecimal, min:BigDecimal, max:BigDecimal ) => new OutputValue( i, num, sum, min, max )
   ):Future[R] = {
     source.
-      via( new SlidingTimeSeriesProcessor[A](windowDuration,outputBuilder ) ).
+      via( new SlidingTimeSeriesProcessor[A]( windowDuration, outputBuilder ) ).
       runWith(sink)
   }
 }

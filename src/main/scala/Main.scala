@@ -27,7 +27,7 @@ object Main {
   def main(args: Array[String]) {
 
 
-    val inputPath = Paths.get( "/home/aloise/work/www/aloise/challenge-fyber/src/src/main/resources/data_scala.txt" )
+    val inputPath = Paths.get( "/home/aloise/work/www/aloise/challenge-fyber/docs/data_scala.txt" )
 
     val inputFile =
       FileIO.
