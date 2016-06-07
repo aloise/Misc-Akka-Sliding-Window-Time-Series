@@ -16,9 +16,13 @@ class InputValue( val timestamp:Int, val value:BigDecimal ) {
 object InputValue {
 
   def parse( str:String ):Try[InputValue] = Try {
-    val Array( timestamp, value ) = str.trim.split("\\s+", 2)
+    val arr = str.trim.split("\\s+")
+    if( arr.length >= 2 ) {
 
-    new InputValue( timestamp.toInt, BigDecimal( value ) )
+      new InputValue( arr(0).toInt, BigDecimal(arr(1)))
+    } else {
+      throw new IllegalArgumentException("Unable to parse input line")
+    }
   }
 
 

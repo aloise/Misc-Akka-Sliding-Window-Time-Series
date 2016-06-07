@@ -18,7 +18,7 @@ class SlidingSeqMetricsSpec extends FlatSpec with BeforeAndAfterAll with ShouldM
     s.toSeq shouldBe empty
   }
 
-/*  it should "compute stats correctly" in {
+  it should "compute stats correctly" in {
     val s = new SlidingSeqMetrics[Int]( _ - _ < 3 )
 
     s.push(1)
@@ -52,7 +52,7 @@ class SlidingSeqMetricsSpec extends FlatSpec with BeforeAndAfterAll with ShouldM
     s.sum shouldBe 33
     s.num shouldBe 3
 
-  }*/
+  }
 
   it should "work with custom data types" in {
 
@@ -95,8 +95,6 @@ class SlidingSeqMetricsSpec extends FlatSpec with BeforeAndAfterAll with ShouldM
     s.min.value shouldBe BigDecimal("0.22")
     s.max.value shouldBe BigDecimal("10")
     s.sum shouldBe BigDecimal("11.22")
-
-
 
   }
 

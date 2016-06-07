@@ -22,5 +22,4 @@ trait SlidingSeqLike[A] extends scala.collection.mutable.Iterable[A] {
 
   def length:Int
 
-
 }

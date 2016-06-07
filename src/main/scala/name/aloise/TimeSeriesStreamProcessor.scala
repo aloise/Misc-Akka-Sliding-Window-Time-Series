@@ -16,11 +16,14 @@ import scala.concurrent.duration.Duration
   * User: aloise
   * Date: 04.06.16
   * Time: 16:51
+  *
+  * Encapsulates the processing stream processing logic. It takes InputValue type object and produces the OutputValue type.
+  * It's possible to provide a custom output class builder.
   */
 class TimeSeriesStreamProcessor( implicit actorSystem:ActorSystem, materializer:ActorMaterializer ) {
 
   /**
-    *
+    * Consumes the input and produces a list of OutputValues
     * @param source Input Source
     * @param sink Output Sink
     * @param windowDuration Event window duration

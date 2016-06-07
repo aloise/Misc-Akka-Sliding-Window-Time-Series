@@ -41,7 +41,8 @@ class ProcessingSpec extends FlatSpec with BeforeAndAfterAll with ShouldMatchers
                     |1355271562 1.80275 2 3.6054 1.80265 1.80275
                     |1355271588 1.80295 2 3.6057 1.80275 1.80295""".trim.stripMargin
 
-  val inputData = """1355270609	1.80215
+  val inputData = """1355270609	1.80215 it would ignore additional data in line
+                    |1055270621	1.80185 this line is placed with incorrect timestamp intentionally. it should not affect on correct output
                     |1355270621	1.80185
                     |1355270646	1.80195
                     |1355270702	1.80225

@@ -6,15 +6,16 @@ import scala.math.ScalaNumber
   * User: aloise
   * Date: 05.06.16
   * Time: 23:26
-  */
+*/
 
 
 /**
-  * Provide
+  * Provides a sliding sequence implementation with stats ( min, max, sum, index in window ).
+  * Min, Max, Sum, Index is computed in O(1)
   *
   * @param belongsToGroup ( NEWEST ELEMENT, OLDEST ELEMENT ) => it would remove elements from tail until the function returns false
   * @tparam A element type
-  */
+*/
 
 class SlidingSeqMetrics[A](
   belongsToGroup: ( A, A ) => Boolean
@@ -24,7 +25,7 @@ class SlidingSeqMetrics[A](
 ) extends SlidingSeq[A]( belongsToGroup ) {
 
   /**
-    * It is used to implement min / max in O(1)
+    * It is used to implement min / max heap in O(1)
   */
   val minStack = new java.util.LinkedList[A]()
   val maxStack = new java.util.LinkedList[A]()

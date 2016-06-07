@@ -15,7 +15,7 @@ import scala.collection.JavaConversions._
   * @param belongsToGroup ( NEWEST ELEMENT, OLDEST ELEMENT ) => it would remove elements from tail until the function returns false
   * @tparam A element type
   */
-class SlidingSeq[A](belongsToGroup: (A,A) => Boolean ) extends SlidingSeqLike[A] with SlidingSeqAfterPush[A] with SlidingSeqBeforeRemove[A] {
+class SlidingSeq[A]( belongsToGroup: (A,A) => Boolean, maxElements:Int = Int.MaxValue ) extends SlidingSeqLike[A] with SlidingSeqAfterPush[A] with SlidingSeqBeforeRemove[A] {
 
   protected val buffer = new java.util.LinkedList[A]()
 
@@ -28,7 +28,10 @@ class SlidingSeq[A](belongsToGroup: (A,A) => Boolean ) extends SlidingSeqLike[A]
     buffer.addFirst( elem )
     afterPush(elem)
 
-    while( ( buffer.size() > 1 ) && !belongsToGroup( elem, buffer.peekLast() ) ){
+    while(
+      ( buffer.size() > 1 ) &&
+      ( buffer.size() > maxElements || !belongsToGroup( elem, buffer.peekLast() ) )
+    ) {
       val elemToDelete = buffer.peekLast()
       buffer.removeLast()
       afterRemove(elemToDelete)
